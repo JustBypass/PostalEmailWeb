@@ -1,0 +1,64 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
+spring:
+  application:
+    name: logInOut
+  security:
+    oauth2:
+      client:
+        registration:
+          gmail:
+            client-id: ${GMAIL-CLIENT-ID:1095309812910-k3u22epf9mo0rei542fdbmc45oac37fg.apps.googleusercontent.com}
+            client-secret: ${GMAIL-CLIENT-SECRET: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}
+            authorization-grant-type: authorization_code
+            scope: https://www.googleapis.com/auth/gmail.send
+            redirect-uri: ${REDIRECT_URL:http://localhost:9070}
+          yahoo:
+            provider: yahoo
+            client-id: ${YAHOO-CLIENT-SECRET:dj0yJmk9c2RHN21NYUZXV1FWJmQ9WVdrOVYzcFRVbGc0YnpFbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTQ0}
+            client-secret: ${YAHOO-CLIENT-SECRET:5699cb83edaf2a2c10d7cea439592fee56dec0e5}
+            scope:
+              - openid
+              - mail-r
+            authorization-grant-type: authorization_code
+            redirect-uri: ${REDIRECT_URL:http://localhost:9070}
+          yandex:
+            provider: yandex
+            scope:
+              - mail:imap_full
+              - mail:imap_ro
+              - mail:smtp
+              - login:email
+            authorization-grant-type: authorization_code
+            redirect-uri: ${REDIRECT_URL:http://localhost:9070}
+            client-id: ${GMAIL-CLIENT-ID:018a392fc04a4ea395957b4ad1b3c999}
+            client-secret: ${GMAIL-CLIENT-SECRET:cdbd3feb21d2429e9b824867b69560d6}
+        provider:
+          yahoo:
+            authorization-uri: https://api.login.yahoo.com/oauth2/request_auth
+            token-uri: https://your-subdomain.oktapreview.com/oauth2/v1/token
+            user-info-uri: https://your-subdomain.oktapreview.com/oauth2/v1/userinfo
+            jwk-set-uri: https://your-subdomain.oktapreview.com/oauth2/v1/keys
+          yandex:
+            authorization-uri: https://oauth.yandex.ru/authorize
+            token-uri: https://oauth.yandex.ru/token
+            user-info-uri: https://login.yandex.ru/info
+          gmail:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
+            user-name-attribute: user_name
+
+jwt: ${JWT:vfh4gv5th4en5o4c546456oinr5ebh4igr743r}
+mail-login-url: ${MAIL_LOGIN_URL:http://localhost:9999/login}
+database-login-url: ${DATABASE-LOGIN-URL:http://localhost:8088/login}

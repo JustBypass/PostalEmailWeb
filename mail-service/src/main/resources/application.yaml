@@ -1,0 +1,14 @@
+fill-cache-url: ${FILL_CACHE_URL}
+delete-cached: ${DELETE_FROM_CACHE_URL}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true

@@ -1,0 +1,20 @@
+version: '3'
+services:
+  cached-messages:
+    image: dumponce/logio:auth-module
+    ports:
+      - 8080:9070
+    environment:
+      PORT: 9070
+      MAIL_LOGIN_URL: http://localhost:9999/login
+      REDIRECT_URL: http://localhost:9070/
+      JWT: ortgiheorfjkerjighoejrjiuh54789rifjnek
+      DATABASE-LOGIN-URL: http://localhost:8088/login
+      YANDEX-CLIENT-ID: 018a392fc04a4ea395957b4ad1b3c999
+      YANDEX-CLIENT-SECRET: cdbd3feb21d2429e9b824867b69560d6
+      GMAIL-CLIENT-ID: 1095309812910-k3u22epf9mo0rei542fdbmc45oac37fg.apps.googleusercontent.com
+      GMAIL-CLIENT-SECRET: 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
+      YAHOO-CLIENT-ID: dj0yJmk9c2RHN21NYUZXV1FWJmQ9WVdrOVYzcFRVbGc0YnpFbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTQ0
+      YAHOO-CLIENT-SECRET: 5699cb83edaf2a2c10d7cea439592fee56dec0e5
+      MAILRU-CLIENT-ID:
+      MAILRU-CLIENT-SECRET:

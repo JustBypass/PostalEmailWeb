@@ -1,0 +1,25 @@
+name: build-and-pass-all-my-tests
+on:
+  push:
+    branches:
+      - master
+  pull-request:
+    branches:
+      - 'main'
+      - 'dev'
+      - 'releases/**'
+jobs:
+  cache-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          java-version: '11'
+      - name: cached-messages tests
+        run: |
+          cd ./cached-messages/ /
+          mvn test
+      - name: database tests
+        run: |
+          cd ./database/ /
+          mvn test

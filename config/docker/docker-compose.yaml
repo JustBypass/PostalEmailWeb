@@ -1,0 +1,133 @@
+version: '3.7'
+services:
+  nginx:
+    image: nginx
+    ports:
+      - 9093:8080
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - default
+      - internal
+    depends_on:
+      - db
+      - cached-messages
+      - mail
+      - planned
+      - logio
+  database-common:
+    image: 'postgres:latest'
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: ca
+      POSTGRES_DB: database
+    networks:
+      - internal
+  db:
+    image: 'dumponce/database:v1'
+    hostname: db
+    ports:
+      - 8081:8080
+    environment:
+      DATABASE_URL: jdbc:postgresql://database-common/database
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: ca
+    networks:
+      - internal
+    depends_on:
+      - database-common
+  mail:
+    hostname: mail
+    deploy:
+      replicas: 3
+    container_name: mail
+    image: 'dumponce/mail:test'
+    ports:
+      - 8082:8080
+    environment:
+      FILL_CACHE_URL: http://db:8080/users/online
+      DELETE_FROM_CACHE_URL: ''
+    depends_on:
+      - db
+    networks:
+      - internal
+  cached-messages:
+    hostname: cached
+    image: 'dumponce/cache:v1'
+    ports:
+      - 8060:8080
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: ca
+      POSTGRES_DB: database
+      AUTHORIZATION_URL: http://logio:8080/token/v1/validate
+      DATABASE_URL: jdbc:postgresql://database-cache/database
+    depends_on:
+      - database-cache
+    networks:
+      - internal
+
+  database-cache:
+    image: 'postgres:latest'
+    ports:
+      - 7060:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: ca
+      POSTGRES_DB: database
+    networks:
+      - internal
+  database-planned:
+    image: 'postgres:latest'
+    ports:
+      - 7050:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: ca
+      POSTGRES_DB: database
+    networks:
+      - internal
+  planned:
+    hostname: planned
+    image: 'dumponce/planned:v1'
+    ports:
+      - 9050:8080
+    environment:
+      ONLINE_USERS_URL: http://db:8080/users/online
+      SEND_POST_URL: ''
+      DATABASE_URL: jdbc:postgresql://database-planned/database
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: ca
+    depends_on:
+      - database-planned
+    networks:
+      - internal
+  logio:
+    hostname: logio
+    image: 'dumponce/logio:v1'
+    ports:
+      - 9071:8080
+    environment:
+      MAIL_LOGIN_URL: http://mail:8080/login
+      REDIRECT_URL: http://db:8080/
+      JWT: ${JWT}
+      DATABASE-LOGIN-URL: http://db:8080/login
+      YANDEX-CLIENT-ID: ${YANDEX_CLIENT_ID}
+      YANDEX-CLIENT-SECRET: ${YANDEX_CLIENT_SECRET}
+      GMAIL-CLIENT-ID: ${GMAIL_CLIENT_ID}
+      GMAIL-CLIENT-SECRET: ${GMAIL_CLIENT_SECRET}
+      YAHOO-CLIENT-ID: ${YAHOO_CLIENT_ID}
+      YAHOO-CLIENT-SECRET: ${YAHOO_CLIENT_SECRET}
+      MAILRU-CLIENT-ID:
+      MAILRU-CLIENT-SECRET:
+    depends_on:
+      - database-common
+    networks:
+      - internal
+secrets:
+  oauth2:
+configs:
+  databases:
+networks:
+  internal:
+    driver: bridge

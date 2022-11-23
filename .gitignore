@@ -1,0 +1,17 @@
+# Project exclude paths
+/auth/target/
+/cached-input/target/
+/cached-messages/target/
+/database/target/
+/global/target/
+/global-filters/target/
+/log-in-out/target/
+/mail-service/target/
+/notes/target/
+/pdf/target/
+/search/target/
+/spam/target/
+/.idea
+.idea
+/*.ini
+config/deployment/deployment.sh
