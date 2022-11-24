@@ -8,6 +8,7 @@ message ClientsRequest {
 
 message ClientsResponse {
   string pong = 1;
+  string email = 2;
 }
 
 service ClientsService {
