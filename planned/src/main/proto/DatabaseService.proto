@@ -1,0 +1,15 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package com.postal.scheduled.service;
+
+message ClientsRequest {
+  string ping = 1;
+}
+
+message ClientsResponse {
+  string pong = 1;
+}
+
+service ClientsService {
+  rpc getClients(ClientsRequest) returns (ClientsResponse);
+}

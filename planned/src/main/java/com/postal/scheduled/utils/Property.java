@@ -11,4 +11,6 @@ public class Property {
     private String onlineUsersUrl;
     @Value("${resources.send}")
     private String sendPostUrl;
+
+    private String grpcServiceHost;
 }
